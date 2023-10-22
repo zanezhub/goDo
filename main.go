@@ -1,58 +1,34 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"os"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
-type Note struct {
-	Id          string `json:"Id"`
-	Title       string `json:"Title"`
-	Date        string `json:"Date"`
-	Description string `json:"Description"`
-	Complete    bool   `json:"Complete"`
-}
-
-func Read(path string) map[int]Note {
-	file, err := os.ReadFile(path)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	var notes map[int]Note
-	err = json.Unmarshal(file, &notes)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return notes
-}
-
 func main() {
-	/*
-		n := map[int]note{
-			1: {
-				Id:          "1",
-				Title:       "Title",
-				Date:        "Today",
-				Description: "Test,
-				Complete:    false,
-			},
-			2: {
-				Id:          "2",
-				Title:       "Title",
-				Date:        "Today",
-				Description: "Test, test",
-				Complete:    false,
-			},
-		}
-	*/
 	path := "tasks.json"
 	notes := Read(path)
 
-	for i, v := range notes {
-		fmt.Printf("i: %d -> %v\n", i, v)
+	/*
+			for i, v := range notes {
+				fmt.Print(i)
+				fmt.Println(v)
+			}
+
+		ADD()
+		newnote := Note{
+			Title:       "Test title",
+			Date:        "12 NOV 2023",
+			Description: "TTestingTestingTestingTestingesting",
+			Complete:    false,
+			Tags:        []string{"test", "tarea"},
+		}
+	*/
+	p := tea.NewProgram(initialModel(&notes))
+	if _, err := p.Run(); err != nil {
+		fmt.Printf("Alas, there's been an error: %v", err)
+		os.Exit(1)
 	}
 }
